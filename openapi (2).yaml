@@ -1,0 +1,392 @@
+openapi: 3.0.3
+info:
+  title: Книжный магазин
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Dev server
+paths:
+  /comixs:
+    post:
+      summary: Создание комикса
+      operationId: createcomix
+      tags:
+        - Comixs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/comix"
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application:
+              schema:
+                $ref: "#/components/schemas/comix"
+        'default':
+          description: Ошибка
+          content:
+            application/json:
+              schema:
+               $ref: "#/components/schemas/Error"
+    get:
+      summary: Получение списка комиксов
+      tags:
+        - Comixs
+      operationId: getAllcomixs
+      responses:
+        '200':
+          description: Успешный ответ 
+          content:
+            application/json:
+              schema:
+               $ref: "#/components/schemas/Comixs"
+        'default':
+         description: Ошибка
+         content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /comixs/{comix_id}:
+    get:
+      summary: Получение комикса по id
+      tags:
+        - Comixs
+      operationId: getcomixById
+      parameters:
+          - name: comix_id
+            in: path
+            required: true
+            description: Id комикса
+            example: 111111553234335
+            schema:
+              type: integer
+              format: int64
+      responses:
+        '200':
+          description: Успешный ответ со списком комиксов
+          content:
+            application/json:
+              schema:
+               $ref: "#/components/schemas/Comixs"
+        'default':
+         description: Ошибка
+         content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      summary: Удаление комикса
+      operationId: deletecomixById
+      tags:
+        - Comixs
+      parameters:
+        - name: comix_id
+          in: path
+          required: true
+          description: Id комикса
+          example: 111111553234335
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Успешное удаление комикса
+          content: {}
+        '400':
+          description: Предоставлено неверное id комикса
+        '404':
+          description: Id комикса не найдено
+          
+  /order:
+    post:
+      tags:
+        - Oders
+      summary: Создание заказа
+      operationId: placeOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Orders'
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Orders'
+        'default':
+          description: Ошибка
+          content:
+            application/json:
+              schema:
+               $ref: "#/components/schemas/Error"  
+  /orders/{order_id}:
+    get:
+      tags:
+        - Oders
+      summary: Получение заказа по Id
+      operationId: getOrderById
+      parameters:
+        - name: order_id
+          in: path
+          description: Id заказа
+          example: 2258455323
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Orders'          
+        'default':
+          description: Ошибка
+          content:
+            application/json:
+              schema:
+               $ref: "#/components/schemas/Error"  
+    delete:
+      tags:
+        - Oders
+      summary: Удаление заказа
+      operationId: deleteOrder
+      parameters:
+        - name: order_id
+          in: path
+          description: Id заказа
+          example: 2258455323
+          required: true
+          schema:
+            type: string
+            format: int64
+      responses:
+        '200':
+          description: Успешное удаление заказа
+          content: {}
+        '400':
+          description: Предоставлено неверное id заказа
+        '404':
+          description: Id закза не найдено
+          
+
+  
+  /user:
+    post:
+      tags:
+        - User
+      summary: Создание пользователя
+      operationId: createUser
+      requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application:
+              schema:
+                $ref: "#/components/schemas/User"
+        'default':
+          description: Ошибка
+          content:
+            application/json:
+              schema:
+               $ref: "#/components/schemas/Error"
+  /user/{user_id}:
+    get:
+      tags:
+        - User
+      summary: Получения пользователя по id
+      operationId: getUserByName
+      parameters:
+        - name: user_id
+          in: path
+          description: Id пользователя
+          example: 0001
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        'default':
+          description: Ошибка
+          content:
+            application/json:
+              schema:
+               $ref: "#/components/schemas/Error"  
+    delete:
+      tags:
+        - User
+      summary: Удаление пользователя
+      operationId: deleteUser
+      parameters:
+        - name: user_id
+          in: path
+          description: Id пользователя
+          example: 0001
+          required: true
+          schema:
+            type: string
+            format: int64
+      responses:
+        '200':
+          description: Успешное удаление пользователя
+          content: {}
+        '400':
+          description: Предоставлено неверное id пользователя
+        '404':
+          description: Id пользователья не найдено
+          
+
+    
+
+
+components:
+  schemas:
+    comix:
+      type: object
+      required:
+        - name
+        - author
+        - date
+        - status
+      properties:
+        comix_id:
+          type: string
+          example: 2258455
+        comix_genre:
+          type: string
+          example: Приключения
+        name:
+          type: string
+          example: Человек-паук
+        author:
+          type: string
+          example: Marvel
+        price:
+          type: integer
+          example: 2567
+        date:
+          type: string
+          format: 2023-04-27T15:00:00+01
+        status:
+          type: string
+          enum:
+            - new
+            - second-hand
+          description: Состояние комикса
+        
+    Comixs:
+      type: array
+      items:
+        $ref: "#/components/schemas/comix"
+        
+        
+        
+    Error:
+        type: object
+        required:
+          - code
+          - message
+        properties:
+          code:
+            type: integer
+          message:
+            type: string
+    
+
+        
+    User:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          format: int64
+          example: 0001
+        username:
+          type: string
+          example: Need2Swagger
+        firstName:
+          type: string
+          example: Александр
+        lastName:
+          type: string
+          example: Гутман
+        email:
+          type: string
+          example: BetterCallSoul@dmail.ai
+        password:
+          type: string
+          example: 'need2swagger'
+        phone:
+          type: string
+          example: '+7-777-777-77-77'
+    Users:
+      type: array
+      items:
+        $ref: "#/components/schemas/User"
+        
+    Order:
+      type: object
+      required:
+        - order_id
+        - comix_id
+        - user_id
+        - price
+      properties:
+        order_id:
+          type: string
+          example: 2258455323
+        comix_id:
+          type: string
+          example: 111111553234335
+        user_id:
+          type: integer
+          format: int64
+          example: 0001
+        price:
+          type: integer
+          example: 2567
+        comix_genre:
+          type: string
+          example: Приключения
+        name_comix:
+          type: string
+          example: Человек-паук
+        
+        shipDate:
+          type: string
+          format: date-time
+        status:
+          type: string
+          description: Статус заказа
+          enum:
+            - created
+            - in way
+            - delivered
+    Orders:
+      type: array
+      items:
+        $ref: "#/components/schemas/Order"
+
+
+
+      
+            
+
